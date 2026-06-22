@@ -2,18 +2,32 @@
 
 **Live URL:** [https://avinashpeyyety.github.io/llmwatch/](https://avinashpeyyety.github.io/llmwatch/)
 
-## Enable Pages (one-time)
+---
 
-1. Open [github.com/avinashpeyyety/llmwatch/settings/pages](https://github.com/avinashpeyyety/llmwatch/settings/pages)
-2. **Source:** Deploy from a branch
+## Fix 404 — enable Pages (one time)
+
+The 404 *"There isn't a GitHub Pages site here"* means Pages is **not enabled** in repo settings. The site files are ready on the `gh-pages` branch (same setup as [ollama-chat-app](https://avinashpeyyety.github.io/ollama-chat-app/)).
+
+### Steps
+
+1. Open **[Settings → Pages](https://github.com/avinashpeyyety/llmwatch/settings/pages)**
+2. Under **Build and deployment → Source**, select **Deploy from a branch**
 3. **Branch:** `gh-pages` · **Folder:** `/ (root)`
-4. Save
+4. Click **Save**
+5. Wait 1–2 minutes, then refresh the live URL
 
-After the first workflow run, the site should be live within a minute.
+You should see: *"Your site is live at https://avinashpeyyety.github.io/llmwatch/"*
+
+---
+
+## How updates work
+
+- **Automatic:** pushing to `main` runs `.github/workflows/pages.yml`, which updates the `gh-pages` branch from `docs/`
+- **Manual edit:** change `docs/index.html` or `docs/styles.css` on `main`
+
+---
 
 ## Update the terminal screenshot
-
-Regenerate the preview from a live dashboard capture:
 
 ```bash
 ./scripts/capture-preview.py
@@ -21,5 +35,3 @@ git add docs/preview*.html docs/preview.txt
 git commit -m "Update landing page preview"
 git push
 ```
-
-Pushes to `main` that touch `docs/` also run `.github/workflows/pages.yml` automatically.
