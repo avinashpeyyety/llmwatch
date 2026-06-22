@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+.r1 {color: #c0c0c0; text-decoration-color: #c0c0c0; font-weight: bold}
+.r2 {color: #7f7f7f; text-decoration-color: #7f7f7f}
+.r3 {font-weight: bold}
+.r4 {color: #008080; text-decoration-color: #008080}
+.r5 {color: #000080; text-decoration-color: #000080}
+.r6 {color: #008000; text-decoration-color: #008000}
+.r7 {color: #800080; text-decoration-color: #800080}
+.r8 {color: #808000; text-decoration-color: #808000; font-weight: bold}
+body {
+    color: #e8ecf4;
+    background-color: #0d1117;
+    margin: 0;
+    padding: 12px 14px;
+    overflow: hidden;
+}
+</style>
+</head>
+<body>
+    <pre style="font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><code style="font-family:inherit"><span class="r1">llmwatch</span>  <span class="r2">11:47:44</span>  <span class="r2">refresh 1.0s</span>  <span class="r3">q</span><span class="r2"> quit</span>
+
+<span class="r4">╭─────────────────────────────────────────── Memory ───────────────────────────────────────────╮</span>
+<span class="r4">│</span> RAM         9.8 GB / 16.0 GB  (87%)                                                          <span class="r4">│</span>
+<span class="r4">│</span>      ██████████████████████████░░░░                                                          <span class="r4">│</span>
+<span class="r4">│</span> Swap         6.7 GB / 7.0 GB  (96%)                                                          <span class="r4">│</span>
+<span class="r4">│</span>      █████████████████████████████░                                                          <span class="r4">│</span>
+<span class="r4">╰──────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r5">╭────────────────────────────────────────── Storage ───────────────────────────────────────────╮</span>
+<span class="r5">│</span>                                                                                              <span class="r5">│</span>
+<span class="r5">│</span>  <span class="r3"> Mount                            </span> <span class="r3">       Used </span> <span class="r3">      Free </span> <span class="r3">  Use% </span> <span class="r3"> Bar                  </span>  <span class="r5">│</span>
+<span class="r5">│</span>  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  <span class="r5">│</span>
+<span class="r5">│</span>  <span class="r4"> /System/Volumes/Data             </span>    151.5 GB     34.0 GB     82%   █████████████░░░       <span class="r5">│</span>
+<span class="r5">│</span>  <span class="r4"> /System/Volumes/Preboot          </span>     16.8 GB     34.0 GB     33%   █████░░░░░░░░░░░       <span class="r5">│</span>
+<span class="r5">│</span>  <span class="r4"> /                                </span>     15.6 GB     34.0 GB     31%   █████░░░░░░░░░░░       <span class="r5">│</span>
+<span class="r5">│</span>  <span class="r4"> /System/Volumes/Update/mnt1      </span>     15.6 GB     34.0 GB     31%   █████░░░░░░░░░░░       <span class="r5">│</span>
+<span class="r5">│</span>                                                                                              <span class="r5">│</span>
+<span class="r5">╰──────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r6">╭──────────────────────────────────── Local LLMs (Ollama) ─────────────────────────────────────╮</span>
+<span class="r6">│</span> <span class="r3">Model     </span>glm4:9b                                                                            <span class="r6">│</span>
+<span class="r6">│</span> <span class="r3">Status    </span><span class="r2">○ idle                                 </span>                                            <span class="r6">│</span>
+<span class="r6">│</span> <span class="r3">Context   </span>0 prompt tok / 8,192 active / 8,192 max                                            <span class="r6">│</span>
+<span class="r6">│</span> <span class="r3">Model RAM </span>5.0 GB                                                                             <span class="r6">│</span>
+<span class="r6">│</span> <span class="r3">Runner    </span>pid 96798 · CPU 0%                                                                 <span class="r6">│</span>
+<span class="r6">│</span> <span class="r3">Unloads   </span>2026-06-22 12:10:49                                                                <span class="r6">│</span>
+<span class="r6">╰──────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r7">╭─────────────────────────────── Top processes (RAM + disk I/O) ───────────────────────────────╮</span>
+<span class="r7">│</span>                                                                                              <span class="r7">│</span>
+<span class="r7">│</span>  <span class="r3">     PID </span> <span class="r3"> Process                           </span> <span class="r3">       RAM </span> <span class="r3">    CPU </span> <span class="r3">    Disk R </span> <span class="r3">    Disk W </span>  <span class="r7">│</span>
+<span class="r7">│</span>  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  <span class="r7">│</span>
+<span class="r7">│</span>  <span class="r2">   96798 </span>  <span class="r8">/opt/homebrew/Cellar/ollama/0.30…</span>      4.9 GB       0%           —           —   <span class="r7">│</span>
+<span class="r7">│</span>  <span class="r2">   38672 </span>  /Applications/Microsoft              445.4 MB       0%           —           —   <span class="r7">│</span>
+<span class="r7">│</span>  <span class="r2">         </span>  Edge.app/Contents/Frameworks/Mi…                                                 <span class="r7">│</span>
+<span class="r7">│</span>  <span class="r2">     711 </span>  /Applications/Microsoft              336.1 MB       0%           —           —   <span class="r7">│</span>
+<span class="r7">│</span>  <span class="r2">         </span>  Edge.app/Contents/MacOS/Microso…                                                 <span class="r7">│</span>
+<span class="r7">│</span>  <span class="r2">   74005 </span>  /Applications/Microsoft              253.7 MB       0%           —           —   <span class="r7">│</span>
+<span class="r7">│</span>  <span class="r2">         </span>  Edge.app/Contents/Frameworks/Mi…                                                 <span class="r7">│</span>
+<span class="r7">│</span>  <span class="r2">   89793 </span>  /System/Library/PrivateFramework…    174.7 MB       0%           —           —   <span class="r7">│</span>
+<span class="r7">│</span>  <span class="r2">   93575 </span>  /Applications/WhatsApp.app/Conte…    126.3 MB       0%           —           —   <span class="r7">│</span>
+<span class="r7">│</span>  <span class="r2">     739 </span>  /System/Applications/Utilities/T…     93.1 MB       1%           —           —   <span class="r7">│</span>
+<span class="r7">│</span>  <span class="r2">   95435 </span>  /Applications/Microsoft               73.8 MB       0%           —           —   <span class="r7">│</span>
+<span class="r7">│</span>  <span class="r2">         </span>  Edge.app/Contents/Frameworks/Mi…                                                 <span class="r7">│</span>
+<span class="r7">│</span>                                                                                              <span class="r7">│</span>
+<span class="r7">╰──────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+</code></pre>
+</body>
+</html>

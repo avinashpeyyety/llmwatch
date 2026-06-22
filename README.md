@@ -1,5 +1,7 @@
 # llmwatch
 
+**Landing page:** [https://avinashpeyyety.github.io/llmwatch/](https://avinashpeyyety.github.io/llmwatch/)
+
 Mac terminal dashboard for:
 
 - **RAM + swap** usage
