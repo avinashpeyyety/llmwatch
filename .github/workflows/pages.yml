@@ -7,6 +7,7 @@ on:
       - "docs/**"
       - ".github/workflows/pages.yml"
       - "scripts/capture-preview.py"
+      - "llmwatch/**"
   workflow_dispatch:
 
 permissions:

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import time
 from datetime import datetime
 
 from rich import box
@@ -8,8 +9,10 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
+from llmwatch.collectors.api_sessions import ApiDashboard, ApiSession
+from llmwatch.collectors.api_stats_store import LastInteraction, MtdStats
 from llmwatch.collectors.ollama import LlmRuntime
-from llmwatch.formatters import bar, bytes_human, rate_human
+from llmwatch.formatters import bar, bytes_human, rate_human, short_path
 
 
 def _status_text(status: str) -> Text:
@@ -82,6 +85,116 @@ def render_process_panel(processes: list[dict]) -> Panel:
     )
 
 
+def _time_ago(ts: float) -> str:
+    if ts <= 0:
+        return "—"
+    delta = max(0.0, time.time() - ts)
+    if delta < 60:
+        return f"{int(delta)}s ago"
+    if delta < 3600:
+        return f"{int(delta // 60)}m ago"
+    if delta < 86400:
+        return f"{int(delta // 3600)}h ago"
+    return f"{int(delta // 86400)}d ago"
+
+
+def _render_last_interaction(last: LastInteraction | None) -> RenderableType:
+    table = Table.grid(padding=(0, 1))
+    table.add_column(style="bold yellow")
+    table.add_column()
+    table.add_row("Section", Text("Last interaction", style="bold yellow"))
+
+    if not last:
+        table.add_row("Info", Text("No API messages recorded yet", style="dim"))
+        return table
+
+    table.add_row("When", _time_ago(last.at))
+    table.add_row("Backend", last.backend)
+    table.add_row("Model", last.model)
+    table.add_row(
+        "Tokens",
+        f"{last.tokens_sent:,} sent · {last.tokens_received:,} received",
+    )
+    table.add_row(
+        "Cost",
+        f"${last.message_cost:.4f} message · ${last.session_cost:.4f} session",
+    )
+    if last.repo:
+        table.add_row("Repo", short_path(last.repo, 48))
+    return table
+
+
+def _render_mtd_stats(mtd: MtdStats) -> RenderableType:
+    table = Table.grid(padding=(0, 1))
+    table.add_column(style="bold yellow")
+    table.add_column()
+    label = mtd.month or datetime.now().strftime("%Y-%m")
+    table.add_row("Section", Text(f"Month to date ({label})", style="bold yellow"))
+    table.add_row("Messages", f"{mtd.messages:,}")
+    table.add_row(
+        "Tokens",
+        f"{mtd.tokens_sent:,} sent · {mtd.tokens_received:,} received",
+    )
+    table.add_row("Cost", f"${mtd.total_cost:.4f}")
+    return table
+
+
+def _render_active_session(session: ApiSession) -> RenderableType:
+    table = Table.grid(padding=(0, 1))
+    table.add_column(style="bold")
+    table.add_column()
+
+    table.add_row("Section", Text("Active session", style="bold yellow"))
+    table.add_row("Backend", session.backend)
+    table.add_row("Model", session.model)
+    if session.status == "active":
+        table.add_row("Status", Text("● active", style="bold cyan"))
+    else:
+        table.add_row("Status", _status_text(session.status))
+    if session.stats_available:
+        table.add_row(
+            "Tokens",
+            f"{session.tokens_sent:,} sent · {session.tokens_received:,} received",
+        )
+        if session.session_cost > 0 or session.last_message_cost > 0:
+            table.add_row(
+                "Cost",
+                f"${session.last_message_cost:.4f} last · ${session.session_cost:.4f} session",
+            )
+    else:
+        table.add_row(
+            "Stats",
+            Text("restart via aider-xai for live token/cost tracking", style="dim"),
+        )
+    if session.repo:
+        table.add_row("Repo", short_path(session.repo, 48))
+    table.add_row("PID", str(session.pid))
+    return table
+
+
+def render_api_panel(dashboard: ApiDashboard) -> Panel:
+    sections: list[RenderableType] = []
+
+    if dashboard.sessions:
+        for session in dashboard.sessions:
+            sections.append(_render_active_session(session))
+            sections.append(Text(""))
+    else:
+        sections.append(Text("No active API session", style="dim"))
+        sections.append(Text(""))
+
+    sections.append(_render_last_interaction(dashboard.last_interaction))
+    sections.append(Text(""))
+    sections.append(_render_mtd_stats(dashboard.mtd))
+
+    return Panel(
+        Group(*sections),
+        title="API sessions (Aider)",
+        border_style="yellow",
+        box=box.ROUNDED,
+    )
+
+
 def render_llm_panel(runtimes: list[LlmRuntime], ollama_up: bool) -> Panel:
     if not ollama_up and not runtimes:
         body = Text("Ollama not reachable. Start with: brew services start ollama", style="yellow")
@@ -131,6 +244,7 @@ def render_dashboard(
     disks: list[dict],
     processes: list[dict],
     runtimes: list[LlmRuntime],
+    api_dashboard: ApiDashboard,
     ollama_up: bool,
     refresh_s: float,
 ) -> Group:
@@ -150,5 +264,6 @@ def render_dashboard(
         render_memory_panel(mem),
         render_disk_panel(disks),
         render_llm_panel(runtimes, ollama_up),
+        render_api_panel(api_dashboard),
         render_process_panel(processes),
     )

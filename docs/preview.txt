@@ -1,44 +1,81 @@
-llmwatch  11:47:44  refresh 1.0s  q quit
+llmwatch  16:56:23  refresh 1.0s  q quit
 
 ╭─────────────────────────────────────────── Memory ───────────────────────────────────────────╮
-│ RAM         9.8 GB / 16.0 GB  (87%)                                                          │
+│ RAM         8.4 GB / 16.0 GB  (61%)                                                          │
+│      ██████████████████░░░░░░░░░░░░                                                          │
+│ Swap         6.8 GB / 8.0 GB  (86%)                                                          │
 │      ██████████████████████████░░░░                                                          │
-│ Swap         6.7 GB / 7.0 GB  (96%)                                                          │
-│      █████████████████████████████░                                                          │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────╯
 ╭────────────────────────────────────────── Storage ───────────────────────────────────────────╮
 │                                                                                              │
 │   Mount                                    Used        Free    Use%   Bar                    │
 │  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │
-│   /System/Volumes/Data                 151.5 GB     34.0 GB     82%   █████████████░░░       │
-│   /System/Volumes/Preboot               16.8 GB     34.0 GB     33%   █████░░░░░░░░░░░       │
-│   /                                     15.6 GB     34.0 GB     31%   █████░░░░░░░░░░░       │
-│   /System/Volumes/Update/mnt1           15.6 GB     34.0 GB     31%   █████░░░░░░░░░░░       │
+│   /System/Volumes/Data                 157.1 GB     27.5 GB     85%   ██████████████░░       │
+│   /System/Volumes/Preboot               16.8 GB     27.5 GB     38%   ██████░░░░░░░░░░       │
+│   /                                     15.6 GB     27.5 GB     36%   ██████░░░░░░░░░░       │
+│   /System/Volumes/Update/mnt1           15.6 GB     27.5 GB     36%   ██████░░░░░░░░░░       │
 │                                                                                              │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────╯
-╭──────────────────────────────────── Local LLMs (Ollama) ─────────────────────────────────────╮
-│ Model     glm4:9b                                                                            │
-│ Status    ○ idle                                                                             │
-│ Context   0 prompt tok / 8,192 active / 8,192 max                                            │
-│ Model RAM 5.0 GB                                                                             │
-│ Runner    pid 96798 · CPU 0%                                                                 │
-│ Unloads   2026-06-22 12:10:49                                                                │
+╭───────────────────────────────────────── Local LLMs ─────────────────────────────────────────╮
+│ No models loaded in memory. Run a model to see context and tok/s.                            │
+╰──────────────────────────────────────────────────────────────────────────────────────────────╯
+╭──────────────────────────────────── API sessions (Aider) ────────────────────────────────────╮
+│ Section Active session                                                                       │
+│ Backend xAI                                                                                  │
+│ Model   xai/grok-code-fast-1                                                                 │
+│ Status  ● active                                                                             │
+│ Stats   restart via aider-xai for live token/cost tracking                                   │
+│ Repo    …rary/CloudStorage/OneDrive-Personal/AI Projects                                     │
+│ PID     3843                                                                                 │
+│                                                                                              │
+│ Section Active session                                                                       │
+│ Backend xAI                                                                                  │
+│ Model   xai/grok-code-fast-1                                                                 │
+│ Status  ○ idle                                                                               │
+│ Tokens  0 sent · 0 received                                                                  │
+│ Repo    ~/OneDrive/AI Projects/llmwatch                                                      │
+│ PID     5145                                                                                 │
+│                                                                                              │
+│ Section Active session                                                                       │
+│ Backend xAI                                                                                  │
+│ Model   xai/grok-4-1-fast-reasoning-latest                                                   │
+│ Status  ○ idle                                                                               │
+│ Tokens  5,152 sent · 1,379 received                                                          │
+│ Cost    $0.0003 last · $0.0028 session                                                       │
+│ Repo    ~/OneDrive/AI Projects                                                               │
+│ PID     4498                                                                                 │
+│                                                                                              │
+│ Section Last interaction                                                                     │
+│ When    5m ago                                                                               │
+│ Backend xAI                                                                                  │
+│ Model   xai/grok-4-1-fast-reasoning-latest                                                   │
+│ Tokens  919 sent · 138 received                                                              │
+│ Cost    $0.0003 message · $0.0028 session                                                    │
+│ Repo    ~/OneDrive/AI Projects                                                               │
+│                                                                                              │
+│ Section  Month to date (2026-06)                                                             │
+│ Messages 7                                                                                   │
+│ Tokens   5,152 sent · 1,379 received                                                         │
+│ Cost     $0.0028                                                                             │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────╯
 ╭─────────────────────────────── Top processes (RAM + disk I/O) ───────────────────────────────╮
 │                                                                                              │
 │       PID   Process                                   RAM      CPU      Disk R      Disk W   │
 │  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │
-│     96798   /opt/homebrew/Cellar/ollama/0.30…      4.9 GB       0%           —           —   │
-│     38672   /Applications/Microsoft              445.4 MB       0%           —           —   │
+│     38672   /Applications/Microsoft              651.2 MB       0%           —           —   │
 │             Edge.app/Contents/Frameworks/Mi…                                                 │
-│       711   /Applications/Microsoft              336.1 MB       0%           —           —   │
+│       711   /Applications/Microsoft              453.7 MB       9%           —           —   │
 │             Edge.app/Contents/MacOS/Microso…                                                 │
-│     74005   /Applications/Microsoft              253.7 MB       0%           —           —   │
+│     74005   /Applications/Microsoft              391.7 MB       2%           —           —   │
 │             Edge.app/Contents/Frameworks/Mi…                                                 │
-│     89793   /System/Library/PrivateFramework…    174.7 MB       0%           —           —   │
-│     93575   /Applications/WhatsApp.app/Conte…    126.3 MB       0%           —           —   │
-│       739   /System/Applications/Utilities/T…     93.1 MB       1%           —           —   │
-│     95435   /Applications/Microsoft               73.8 MB       0%           —           —   │
+│      2304   /Applications/Microsoft              332.0 MB       0%           —           —   │
+│             Edge.app/Contents/Frameworks/Mi…                                                 │
+│       478   /Applications/Citrix                 254.2 MB       1%           —           —   │
+│             Workspace.app/Contents/CitrixWor…                                                │
+│      5145   /opt/homebrew/Cellar/python@3.12…    198.9 MB       0%           —           —   │
+│      5206   /Applications/Microsoft              195.4 MB       0%           —           —   │
+│             Edge.app/Contents/Frameworks/Mi…                                                 │
+│     75588   /Applications/Microsoft              183.5 MB       0%           —           —   │
 │             Edge.app/Contents/Frameworks/Mi…                                                 │
 │                                                                                              │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────╯

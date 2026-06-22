@@ -10,6 +10,7 @@ from rich.console import Console
 from rich.live import Live
 
 from llmwatch import __version__
+from llmwatch.collectors.api_sessions import ApiSessionMonitor
 from llmwatch.collectors.ollama import OllamaMonitor
 from llmwatch.collectors.processes import ProcessSampler
 from llmwatch.collectors.system import collect_disk, collect_memory
@@ -61,6 +62,7 @@ def main(argv: list[str] | None = None) -> int:
     host = args.ollama_host or OllamaMonitor().host
     sampler = ProcessSampler()
     ollama = OllamaMonitor(host=host, log_path=Path(args.ollama_log))
+    api_sessions = ApiSessionMonitor()
 
     try:
         with Live(console=console, refresh_per_second=4, screen=True) as live:
@@ -69,12 +71,14 @@ def main(argv: list[str] | None = None) -> int:
                 disks = collect_disk()
                 processes = sampler.collect(top_n=args.processes, interval=args.refresh)
                 runtimes = ollama.collect()
+                api_dashboard = api_sessions.collect()
                 live.update(
                     render_dashboard(
                         mem=mem,
                         disks=disks,
                         processes=processes,
                         runtimes=runtimes,
+                        api_dashboard=api_dashboard,
                         ollama_up=ollama_reachable(host),
                         refresh_s=args.refresh,
                     )

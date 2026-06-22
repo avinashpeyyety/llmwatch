@@ -7,6 +7,8 @@ from pathlib import Path
 
 from rich.console import Console
 
+from llmwatch.collectors.api_sessions import ApiDashboard, ApiSession, ApiSessionMonitor
+from llmwatch.collectors.api_stats_store import LastInteraction, MtdStats
 from llmwatch.collectors.ollama import OllamaMonitor
 from llmwatch.collectors.processes import ProcessSampler
 from llmwatch.collectors.system import collect_disk, collect_memory
@@ -22,9 +24,44 @@ def main() -> None:
     disks = collect_disk()
     processes = ProcessSampler().collect(8)
     runtimes = OllamaMonitor().collect()
+    api_dashboard = ApiSessionMonitor().collect()
+    if not api_dashboard.sessions:
+        api_dashboard = ApiDashboard(
+            sessions=[
+                ApiSession(
+                    pid=4242,
+                    model="xai/grok-code-fast-1",
+                    backend="xAI",
+                    repo="~/Projects/my-app",
+                    status="idle",
+                    tokens_sent=12840,
+                    tokens_received=3920,
+                    session_cost=0.1842,
+                    last_message_cost=0.0214,
+                    stats_available=True,
+                )
+            ],
+            last_interaction=LastInteraction(
+                model="xai/grok-code-fast-1",
+                backend="xAI",
+                repo="~/Projects/my-app",
+                tokens_sent=2140,
+                tokens_received=680,
+                message_cost=0.0214,
+                session_cost=0.1842,
+                at=__import__("time").time() - 180,
+            ),
+            mtd=MtdStats(
+                month=__import__("datetime").datetime.now().strftime("%Y-%m"),
+                tokens_sent=48200,
+                tokens_received=12600,
+                total_cost=0.8421,
+                messages=18,
+            ),
+        )
 
     console = Console(record=True, width=96)
-    console.print(render_dashboard(mem, disks, processes, runtimes, True, 1.0))
+    console.print(render_dashboard(mem, disks, processes, runtimes, api_dashboard, True, 1.0))
     console.save_html(DOCS / "preview.html", clear=False)
 
     dark = (DOCS / "preview.html").read_text()

@@ -20,6 +20,17 @@ def bar(pct: float, width: int = 24) -> str:
     return "█" * filled + "░" * (width - filled)
 
 
+def short_path(path: str, limit: int = 42) -> str:
+    if not path:
+        return ""
+    home = str(__import__("pathlib").Path.home())
+    if path.startswith(home):
+        path = "~" + path[len(home) :]
+    if len(path) <= limit:
+        return path
+    return "…" + path[-(limit - 1) :]
+
+
 def short_cmd(cmdline: list[str] | None, limit: int = 48) -> str:
     if not cmdline:
         return ""

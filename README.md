@@ -8,6 +8,7 @@ Mac terminal dashboard for:
 - **Storage** per volume
 - **Top processes** by memory and disk read/write
 - **Local Ollama LLMs** — loaded context, live tok/s, prompt speed
+- **API sessions (Aider)** — xAI and other cloud models: tokens sent/received, session cost, generating status
 
 ## Install
 
@@ -44,6 +45,22 @@ slot print_timing: ... tg = 18.19 t/s
 That gives **live generation speed** while a model is running. When idle, it shows the **last completed** generation speed.
 
 Context comes from `GET /api/ps` (`context_length`) plus active prompt tokens from the log.
+
+## API session stats (Aider + xAI)
+
+When you run `aider-xai` (or any non-Ollama model via the global `aider` launcher), Aider writes a per-session manifest and analytics log under `~/.config/aider/sessions/`. llmwatch reads those files to show:
+
+- Backend and model name
+- **generating** / **idle** status
+- Tokens sent and received (cumulative for the session)
+- Last message and session cost (when the model reports pricing)
+
+Requires the global launcher from [aider-local](../aider-local) — plain `aider.real` does not emit session files.
+
+Persisted stats live in `~/.config/aider/api-stats.json`:
+
+- **Last interaction** — tokens and cost from the most recent API message (survives after Aider exits)
+- **Month to date (MTD)** — aggregated messages, tokens, and cost for the current calendar month
 
 ## Requirements
 
