@@ -90,6 +90,13 @@ class ApiSessionMonitor:
             return False
         try:
             proc = psutil.Process(pid)
+            status = proc.status()
+            if status in (
+                psutil.STATUS_ZOMBIE,
+                psutil.STATUS_DEAD,
+                psutil.STATUS_STOPPED,
+            ):
+                return False
             name = (proc.name() or "").lower()
             cmd = " ".join(proc.cmdline()).lower()
             return "aider" in name or "aider" in cmd
@@ -247,10 +254,17 @@ class ApiSessionMonitor:
 
     def _discover_from_processes(self, known_pids: set[int]) -> list[ApiSession]:
         sessions: list[ApiSession] = []
-        for proc in psutil.process_iter(["pid", "cmdline", "cwd"]):
+        for proc in psutil.process_iter(["pid", "cmdline", "cwd", "status"]):
             try:
                 pid = int(proc.info.get("pid") or 0)
                 if pid in known_pids:
+                    continue
+                status = proc.info.get("status")
+                if status in (
+                    psutil.STATUS_ZOMBIE,
+                    psutil.STATUS_DEAD,
+                    psutil.STATUS_STOPPED,
+                ):
                     continue
                 cmdline = proc.info.get("cmdline") or []
                 if not any("aider" in (part or "").lower() for part in cmdline):
@@ -307,7 +321,16 @@ class ApiSessionMonitor:
                 known_pids.add(session.pid)
 
         sessions.extend(self._discover_from_processes(known_pids))
-        sessions.sort(key=lambda s: s.last_activity, reverse=True)
+        sessions.sort(
+            key=lambda s: (
+                s.status == "generating",
+                s.last_activity,
+                s.started_at,
+            ),
+            reverse=True,
+        )
+        if sessions:
+            sessions = [sessions[0]]
 
         last_interaction, mtd = self.stats_store.snapshot()
         return ApiDashboard(

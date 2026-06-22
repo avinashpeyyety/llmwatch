@@ -10,7 +10,7 @@ from rich.table import Table
 from rich.text import Text
 
 from llmwatch.collectors.api_sessions import ApiDashboard, ApiSession
-from llmwatch.collectors.api_stats_store import LastInteraction, MtdStats
+from llmwatch.collectors.api_stats_store import MtdStats
 from llmwatch.collectors.ollama import LlmRuntime
 from llmwatch.formatters import bar, bytes_human, rate_human, short_path
 
@@ -85,45 +85,6 @@ def render_process_panel(processes: list[dict]) -> Panel:
     )
 
 
-def _time_ago(ts: float) -> str:
-    if ts <= 0:
-        return "—"
-    delta = max(0.0, time.time() - ts)
-    if delta < 60:
-        return f"{int(delta)}s ago"
-    if delta < 3600:
-        return f"{int(delta // 60)}m ago"
-    if delta < 86400:
-        return f"{int(delta // 3600)}h ago"
-    return f"{int(delta // 86400)}d ago"
-
-
-def _render_last_interaction(last: LastInteraction | None) -> RenderableType:
-    table = Table.grid(padding=(0, 1))
-    table.add_column(style="bold yellow")
-    table.add_column()
-    table.add_row("Section", Text("Last interaction", style="bold yellow"))
-
-    if not last:
-        table.add_row("Info", Text("No API messages recorded yet", style="dim"))
-        return table
-
-    table.add_row("When", _time_ago(last.at))
-    table.add_row("Backend", last.backend)
-    table.add_row("Model", last.model)
-    table.add_row(
-        "Tokens",
-        f"{last.tokens_sent:,} sent · {last.tokens_received:,} received",
-    )
-    table.add_row(
-        "Cost",
-        f"${last.message_cost:.4f} message · ${last.session_cost:.4f} session",
-    )
-    if last.repo:
-        table.add_row("Repo", short_path(last.repo, 48))
-    return table
-
-
 def _render_mtd_stats(mtd: MtdStats) -> RenderableType:
     table = Table.grid(padding=(0, 1))
     table.add_column(style="bold yellow")
@@ -176,15 +137,12 @@ def render_api_panel(dashboard: ApiDashboard) -> Panel:
     sections: list[RenderableType] = []
 
     if dashboard.sessions:
-        for session in dashboard.sessions:
-            sections.append(_render_active_session(session))
-            sections.append(Text(""))
+        sections.append(_render_active_session(dashboard.sessions[0]))
+        sections.append(Text(""))
     else:
         sections.append(Text("No active API session", style="dim"))
         sections.append(Text(""))
 
-    sections.append(_render_last_interaction(dashboard.last_interaction))
-    sections.append(Text(""))
     sections.append(_render_mtd_stats(dashboard.mtd))
 
     return Panel(

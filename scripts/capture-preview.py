@@ -8,7 +8,7 @@ from pathlib import Path
 from rich.console import Console
 
 from llmwatch.collectors.api_sessions import ApiDashboard, ApiSession, ApiSessionMonitor
-from llmwatch.collectors.api_stats_store import LastInteraction, MtdStats
+from llmwatch.collectors.api_stats_store import MtdStats
 from llmwatch.collectors.ollama import OllamaMonitor
 from llmwatch.collectors.processes import ProcessSampler
 from llmwatch.collectors.system import collect_disk, collect_memory
@@ -41,16 +41,6 @@ def main() -> None:
                     stats_available=True,
                 )
             ],
-            last_interaction=LastInteraction(
-                model="xai/grok-code-fast-1",
-                backend="xAI",
-                repo="~/Projects/my-app",
-                tokens_sent=2140,
-                tokens_received=680,
-                message_cost=0.0214,
-                session_cost=0.1842,
-                at=__import__("time").time() - 180,
-            ),
             mtd=MtdStats(
                 month=__import__("datetime").datetime.now().strftime("%Y-%m"),
                 tokens_sent=48200,

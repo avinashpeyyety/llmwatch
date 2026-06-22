@@ -48,19 +48,14 @@ Context comes from `GET /api/ps` (`context_length`) plus active prompt tokens fr
 
 ## API session stats (Aider + xAI)
 
-When you run `aider-xai` (or any non-Ollama model via the global `aider` launcher), Aider writes a per-session manifest and analytics log under `~/.config/aider/sessions/`. llmwatch reads those files to show:
+When you run `aider-xai` (or any non-Ollama model via the global `aider` launcher), Aider writes a per-session manifest and analytics log under `~/.config/aider/sessions/`. llmwatch shows:
 
-- Backend and model name
-- **generating** / **idle** status
-- Tokens sent and received (cumulative for the session)
-- Last message and session cost (when the model reports pricing)
+- **Active session** — one running Aider API session (model, status, tokens, cost)
+- **Month to date (MTD)** — aggregated messages, tokens, and cost for the current calendar month
+
+Ended or suspended sessions are cleaned up automatically and no longer appear in the panel.
 
 Requires the global launcher from [aider-local](../aider-local) — plain `aider.real` does not emit session files.
-
-Persisted stats live in `~/.config/aider/api-stats.json`:
-
-- **Last interaction** — tokens and cost from the most recent API message (survives after Aider exits)
-- **Month to date (MTD)** — aggregated messages, tokens, and cost for the current calendar month
 
 ## Requirements
 
