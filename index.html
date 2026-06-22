@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="llmwatch — Mac terminal monitor for RAM, storage I/O, and live Ollama LLM context and tok/s."
+      content="llmwatch — Mac terminal monitor for RAM, storage I/O, Ollama tok/s, and Aider xAI API session stats."
     />
-    <title>llmwatch — Mac system &amp; local LLM monitor</title>
+    <title>llmwatch — Mac system &amp; LLM monitor</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -29,11 +29,12 @@
 
     <main>
       <section class="hero">
-        <p class="eyebrow">macOS · terminal · ollama</p>
-        <h1>See RAM, storage, and<br />local LLM speed — live</h1>
+        <p class="eyebrow">macOS · terminal · ollama · aider · xai</p>
+        <h1>See RAM, storage, and<br />LLM activity — live</h1>
         <p class="lead">
           <strong>llmwatch</strong> is a terminal dashboard for your Mac: memory and disk at a glance,
-          top processes by RAM and I/O, plus <strong>real-time Ollama context and tok/s</strong> while models run.
+          top processes by RAM and I/O, <strong>real-time Ollama context and tok/s</strong>,
+          and <strong>Aider API session stats</strong> for xAI and other cloud models.
         </p>
         <div class="hero-actions">
           <a class="btn primary" href="#install">Install on Mac</a>
@@ -43,7 +44,7 @@
         <div class="hero-meta">
           <span>Python 3.10+</span>
           <span>·</span>
-          <span>no cloud</span>
+          <span>local-first</span>
           <span>·</span>
           <span>press <code>Ctrl+C</code> to quit</span>
         </div>
@@ -64,7 +65,7 @@
           </div>
         </div>
         <p class="preview-caption">
-          Memory · storage · Ollama models (context + tok/s) · top processes. LLM-related processes are highlighted.
+          Memory · storage · Ollama (context + tok/s) · API sessions (Aider + xAI) · top processes.
         </p>
       </section>
 
@@ -82,6 +83,10 @@
           <article class="card">
             <h3>Local LLMs (Ollama)</h3>
             <p>Loaded model RAM, context window, live generation tok/s, and last completed speed from Ollama logs.</p>
+          </article>
+          <article class="card">
+            <h3>API sessions (Aider)</h3>
+            <p>Active xAI sessions: model, generating/idle status, tokens, and cost. Persists last interaction and month-to-date totals.</p>
           </article>
         </div>
       </section>
@@ -103,19 +108,29 @@ cd llmwatch</code></pre>
               <h3>Run the installer</h3>
               <pre><code>./scripts/install.sh</code></pre>
               <p class="note">
-                Creates a virtualenv in the project folder and adds <code>llmwatch</code> to
-                <code>~/.local/bin</code>. Ensure that directory is on your <code>PATH</code>
-                (restart Terminal or <code>source ~/.zshrc</code>).
+                Creates a virtualenv in the project folder and adds <code>llmwatch</code> and
+                <code>aider-merge-stats</code> to <code>~/.local/bin</code>. Ensure that directory is on your
+                <code>PATH</code> (restart Terminal or <code>source ~/.zshrc</code>).
               </p>
             </div>
           </div>
           <div class="step">
             <span class="step-num">3</span>
             <div>
-              <h3>Optional: Ollama for the LLM panel</h3>
+              <h3>Optional: Ollama for the local LLM panel</h3>
               <pre><code>brew install ollama
 brew services start ollama
-ollama pull glm4:9b   # or any model you use</code></pre>
+ollama pull qwen3.5:9b   # or any model you use</code></pre>
+            </div>
+          </div>
+          <div class="step">
+            <span class="step-num">4</span>
+            <div>
+              <h3>Optional: Aider + xAI for API session stats</h3>
+              <pre><code># Use the global aider launcher (aider-xai), not aider.real
+aider-xai .
+
+# llmwatch reads ~/.config/aider/sessions/ and api-stats.json</code></pre>
             </div>
           </div>
         </div>
@@ -126,10 +141,13 @@ ollama pull glm4:9b   # or any model you use</code></pre>
         <pre><code>llmwatch                  # default 1s refresh
 llmwatch --refresh 0.5    # faster updates
 llmwatch --processes 20   # show more processes</code></pre>
-        <p>Run from any directory after install — the command executes the project code in your clone via an editable Python install.</p>
+        <p>Run from any directory after install. Pair with <code>aider-xai</code> in another terminal to populate API session stats.</p>
         <ul class="feature-list">
-          <li><strong>Live tok/s</strong> — parsed from <code>/opt/homebrew/var/log/ollama.log</code> while a model generates</li>
-          <li><strong>Context</strong> — prompt tokens, active context, and max context from Ollama <code>/api/ps</code></li>
+          <li><strong>Ollama tok/s</strong> — parsed from <code>/opt/homebrew/var/log/ollama.log</code> while a model generates</li>
+          <li><strong>Ollama context</strong> — prompt tokens, active context, and max context from <code>/api/ps</code></li>
+          <li><strong>API sessions</strong> — active Aider xAI sessions with tokens, cost, and generating status</li>
+          <li><strong>Last interaction</strong> — persisted in <code>~/.config/aider/api-stats.json</code> after Aider exits</li>
+          <li><strong>Month to date</strong> — aggregated API messages, tokens, and cost for the current month</li>
           <li><strong>Quit</strong> — <code>Ctrl+C</code></li>
         </ul>
       </section>

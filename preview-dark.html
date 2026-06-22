@@ -9,8 +9,10 @@
 .r4 {color: #008080; text-decoration-color: #008080}
 .r5 {color: #000080; text-decoration-color: #000080}
 .r6 {color: #008000; text-decoration-color: #008000}
-.r7 {color: #800080; text-decoration-color: #800080}
+.r7 {color: #808000; text-decoration-color: #808000}
 .r8 {color: #808000; text-decoration-color: #808000; font-weight: bold}
+.r9 {color: #008080; text-decoration-color: #008080; font-weight: bold}
+.r10 {color: #800080; text-decoration-color: #800080}
 body {
     color: #e8ecf4;
     background-color: #0d1117;
@@ -21,50 +23,87 @@ body {
 </style>
 </head>
 <body>
-    <pre style="font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><code style="font-family:inherit"><span class="r1">llmwatch</span>  <span class="r2">11:47:44</span>  <span class="r2">refresh 1.0s</span>  <span class="r3">q</span><span class="r2"> quit</span>
+    <pre style="font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><code style="font-family:inherit"><span class="r1">llmwatch</span>  <span class="r2">16:56:23</span>  <span class="r2">refresh 1.0s</span>  <span class="r3">q</span><span class="r2"> quit</span>
 
 <span class="r4">╭─────────────────────────────────────────── Memory ───────────────────────────────────────────╮</span>
-<span class="r4">│</span> RAM         9.8 GB / 16.0 GB  (87%)                                                          <span class="r4">│</span>
+<span class="r4">│</span> RAM         8.4 GB / 16.0 GB  (61%)                                                          <span class="r4">│</span>
+<span class="r4">│</span>      ██████████████████░░░░░░░░░░░░                                                          <span class="r4">│</span>
+<span class="r4">│</span> Swap         6.8 GB / 8.0 GB  (86%)                                                          <span class="r4">│</span>
 <span class="r4">│</span>      ██████████████████████████░░░░                                                          <span class="r4">│</span>
-<span class="r4">│</span> Swap         6.7 GB / 7.0 GB  (96%)                                                          <span class="r4">│</span>
-<span class="r4">│</span>      █████████████████████████████░                                                          <span class="r4">│</span>
 <span class="r4">╰──────────────────────────────────────────────────────────────────────────────────────────────╯</span>
 <span class="r5">╭────────────────────────────────────────── Storage ───────────────────────────────────────────╮</span>
 <span class="r5">│</span>                                                                                              <span class="r5">│</span>
 <span class="r5">│</span>  <span class="r3"> Mount                            </span> <span class="r3">       Used </span> <span class="r3">      Free </span> <span class="r3">  Use% </span> <span class="r3"> Bar                  </span>  <span class="r5">│</span>
 <span class="r5">│</span>  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  <span class="r5">│</span>
-<span class="r5">│</span>  <span class="r4"> /System/Volumes/Data             </span>    151.5 GB     34.0 GB     82%   █████████████░░░       <span class="r5">│</span>
-<span class="r5">│</span>  <span class="r4"> /System/Volumes/Preboot          </span>     16.8 GB     34.0 GB     33%   █████░░░░░░░░░░░       <span class="r5">│</span>
-<span class="r5">│</span>  <span class="r4"> /                                </span>     15.6 GB     34.0 GB     31%   █████░░░░░░░░░░░       <span class="r5">│</span>
-<span class="r5">│</span>  <span class="r4"> /System/Volumes/Update/mnt1      </span>     15.6 GB     34.0 GB     31%   █████░░░░░░░░░░░       <span class="r5">│</span>
+<span class="r5">│</span>  <span class="r4"> /System/Volumes/Data             </span>    157.1 GB     27.5 GB     85%   ██████████████░░       <span class="r5">│</span>
+<span class="r5">│</span>  <span class="r4"> /System/Volumes/Preboot          </span>     16.8 GB     27.5 GB     38%   ██████░░░░░░░░░░       <span class="r5">│</span>
+<span class="r5">│</span>  <span class="r4"> /                                </span>     15.6 GB     27.5 GB     36%   ██████░░░░░░░░░░       <span class="r5">│</span>
+<span class="r5">│</span>  <span class="r4"> /System/Volumes/Update/mnt1      </span>     15.6 GB     27.5 GB     36%   ██████░░░░░░░░░░       <span class="r5">│</span>
 <span class="r5">│</span>                                                                                              <span class="r5">│</span>
 <span class="r5">╰──────────────────────────────────────────────────────────────────────────────────────────────╯</span>
-<span class="r6">╭──────────────────────────────────── Local LLMs (Ollama) ─────────────────────────────────────╮</span>
-<span class="r6">│</span> <span class="r3">Model     </span>glm4:9b                                                                            <span class="r6">│</span>
-<span class="r6">│</span> <span class="r3">Status    </span><span class="r2">○ idle                                 </span>                                            <span class="r6">│</span>
-<span class="r6">│</span> <span class="r3">Context   </span>0 prompt tok / 8,192 active / 8,192 max                                            <span class="r6">│</span>
-<span class="r6">│</span> <span class="r3">Model RAM </span>5.0 GB                                                                             <span class="r6">│</span>
-<span class="r6">│</span> <span class="r3">Runner    </span>pid 96798 · CPU 0%                                                                 <span class="r6">│</span>
-<span class="r6">│</span> <span class="r3">Unloads   </span>2026-06-22 12:10:49                                                                <span class="r6">│</span>
+<span class="r6">╭───────────────────────────────────────── Local LLMs ─────────────────────────────────────────╮</span>
+<span class="r6">│</span> <span class="r2">No models loaded in memory. Run a model to see context and tok/s.</span>                            <span class="r6">│</span>
 <span class="r6">╰──────────────────────────────────────────────────────────────────────────────────────────────╯</span>
-<span class="r7">╭─────────────────────────────── Top processes (RAM + disk I/O) ───────────────────────────────╮</span>
+<span class="r7">╭──────────────────────────────────── API sessions (Aider) ────────────────────────────────────╮</span>
+<span class="r7">│</span> <span class="r3">Section </span><span class="r8">Active session                                    </span>                                   <span class="r7">│</span>
+<span class="r7">│</span> <span class="r3">Backend </span>xAI                                                                                  <span class="r7">│</span>
+<span class="r7">│</span> <span class="r3">Model   </span>xai/grok-code-fast-1                                                                 <span class="r7">│</span>
+<span class="r7">│</span> <span class="r3">Status  </span><span class="r9">● active                                          </span>                                   <span class="r7">│</span>
+<span class="r7">│</span> <span class="r3">Stats   </span><span class="r2">restart via aider-xai for live token/cost tracking</span>                                   <span class="r7">│</span>
+<span class="r7">│</span> <span class="r3">Repo    </span>…rary/CloudStorage/OneDrive-Personal/AI Projects                                     <span class="r7">│</span>
+<span class="r7">│</span> <span class="r3">PID     </span>3843                                                                                 <span class="r7">│</span>
 <span class="r7">│</span>                                                                                              <span class="r7">│</span>
-<span class="r7">│</span>  <span class="r3">     PID </span> <span class="r3"> Process                           </span> <span class="r3">       RAM </span> <span class="r3">    CPU </span> <span class="r3">    Disk R </span> <span class="r3">    Disk W </span>  <span class="r7">│</span>
-<span class="r7">│</span>  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  <span class="r7">│</span>
-<span class="r7">│</span>  <span class="r2">   96798 </span>  <span class="r8">/opt/homebrew/Cellar/ollama/0.30…</span>      4.9 GB       0%           —           —   <span class="r7">│</span>
-<span class="r7">│</span>  <span class="r2">   38672 </span>  /Applications/Microsoft              445.4 MB       0%           —           —   <span class="r7">│</span>
-<span class="r7">│</span>  <span class="r2">         </span>  Edge.app/Contents/Frameworks/Mi…                                                 <span class="r7">│</span>
-<span class="r7">│</span>  <span class="r2">     711 </span>  /Applications/Microsoft              336.1 MB       0%           —           —   <span class="r7">│</span>
-<span class="r7">│</span>  <span class="r2">         </span>  Edge.app/Contents/MacOS/Microso…                                                 <span class="r7">│</span>
-<span class="r7">│</span>  <span class="r2">   74005 </span>  /Applications/Microsoft              253.7 MB       0%           —           —   <span class="r7">│</span>
-<span class="r7">│</span>  <span class="r2">         </span>  Edge.app/Contents/Frameworks/Mi…                                                 <span class="r7">│</span>
-<span class="r7">│</span>  <span class="r2">   89793 </span>  /System/Library/PrivateFramework…    174.7 MB       0%           —           —   <span class="r7">│</span>
-<span class="r7">│</span>  <span class="r2">   93575 </span>  /Applications/WhatsApp.app/Conte…    126.3 MB       0%           —           —   <span class="r7">│</span>
-<span class="r7">│</span>  <span class="r2">     739 </span>  /System/Applications/Utilities/T…     93.1 MB       1%           —           —   <span class="r7">│</span>
-<span class="r7">│</span>  <span class="r2">   95435 </span>  /Applications/Microsoft               73.8 MB       0%           —           —   <span class="r7">│</span>
-<span class="r7">│</span>  <span class="r2">         </span>  Edge.app/Contents/Frameworks/Mi…                                                 <span class="r7">│</span>
+<span class="r7">│</span> <span class="r3">Section </span><span class="r8">Active session                 </span>                                                      <span class="r7">│</span>
+<span class="r7">│</span> <span class="r3">Backend </span>xAI                                                                                  <span class="r7">│</span>
+<span class="r7">│</span> <span class="r3">Model   </span>xai/grok-code-fast-1                                                                 <span class="r7">│</span>
+<span class="r7">│</span> <span class="r3">Status  </span><span class="r2">○ idle                         </span>                                                      <span class="r7">│</span>
+<span class="r7">│</span> <span class="r3">Tokens  </span>0 sent · 0 received                                                                  <span class="r7">│</span>
+<span class="r7">│</span> <span class="r3">Repo    </span>~/OneDrive/AI Projects/llmwatch                                                      <span class="r7">│</span>
+<span class="r7">│</span> <span class="r3">PID     </span>5145                                                                                 <span class="r7">│</span>
 <span class="r7">│</span>                                                                                              <span class="r7">│</span>
+<span class="r7">│</span> <span class="r3">Section </span><span class="r8">Active session                    </span>                                                   <span class="r7">│</span>
+<span class="r7">│</span> <span class="r3">Backend </span>xAI                                                                                  <span class="r7">│</span>
+<span class="r7">│</span> <span class="r3">Model   </span>xai/grok-4-1-fast-reasoning-latest                                                   <span class="r7">│</span>
+<span class="r7">│</span> <span class="r3">Status  </span><span class="r2">○ idle                            </span>                                                   <span class="r7">│</span>
+<span class="r7">│</span> <span class="r3">Tokens  </span>5,152 sent · 1,379 received                                                          <span class="r7">│</span>
+<span class="r7">│</span> <span class="r3">Cost    </span>$0.0003 last · $0.0028 session                                                       <span class="r7">│</span>
+<span class="r7">│</span> <span class="r3">Repo    </span>~/OneDrive/AI Projects                                                               <span class="r7">│</span>
+<span class="r7">│</span> <span class="r3">PID     </span>4498                                                                                 <span class="r7">│</span>
+<span class="r7">│</span>                                                                                              <span class="r7">│</span>
+<span class="r7">│</span> <span class="r8">Section Last interaction                  </span>                                                   <span class="r7">│</span>
+<span class="r7">│</span> <span class="r8">When    </span>5m ago                                                                               <span class="r7">│</span>
+<span class="r7">│</span> <span class="r8">Backend </span>xAI                                                                                  <span class="r7">│</span>
+<span class="r7">│</span> <span class="r8">Model   </span>xai/grok-4-1-fast-reasoning-latest                                                   <span class="r7">│</span>
+<span class="r7">│</span> <span class="r8">Tokens  </span>919 sent · 138 received                                                              <span class="r7">│</span>
+<span class="r7">│</span> <span class="r8">Cost    </span>$0.0003 message · $0.0028 session                                                    <span class="r7">│</span>
+<span class="r7">│</span> <span class="r8">Repo    </span>~/OneDrive/AI Projects                                                               <span class="r7">│</span>
+<span class="r7">│</span>                                                                                              <span class="r7">│</span>
+<span class="r7">│</span> <span class="r8">Section  Month to date (2026-06)    </span>                                                         <span class="r7">│</span>
+<span class="r7">│</span> <span class="r8">Messages </span>7                                                                                   <span class="r7">│</span>
+<span class="r7">│</span> <span class="r8">Tokens   </span>5,152 sent · 1,379 received                                                         <span class="r7">│</span>
+<span class="r7">│</span> <span class="r8">Cost     </span>$0.0028                                                                             <span class="r7">│</span>
 <span class="r7">╰──────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+<span class="r10">╭─────────────────────────────── Top processes (RAM + disk I/O) ───────────────────────────────╮</span>
+<span class="r10">│</span>                                                                                              <span class="r10">│</span>
+<span class="r10">│</span>  <span class="r3">     PID </span> <span class="r3"> Process                           </span> <span class="r3">       RAM </span> <span class="r3">    CPU </span> <span class="r3">    Disk R </span> <span class="r3">    Disk W </span>  <span class="r10">│</span>
+<span class="r10">│</span>  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  <span class="r10">│</span>
+<span class="r10">│</span>  <span class="r2">   38672 </span>  /Applications/Microsoft              651.2 MB       0%           —           —   <span class="r10">│</span>
+<span class="r10">│</span>  <span class="r2">         </span>  Edge.app/Contents/Frameworks/Mi…                                                 <span class="r10">│</span>
+<span class="r10">│</span>  <span class="r2">     711 </span>  /Applications/Microsoft              453.7 MB       9%           —           —   <span class="r10">│</span>
+<span class="r10">│</span>  <span class="r2">         </span>  Edge.app/Contents/MacOS/Microso…                                                 <span class="r10">│</span>
+<span class="r10">│</span>  <span class="r2">   74005 </span>  /Applications/Microsoft              391.7 MB       2%           —           —   <span class="r10">│</span>
+<span class="r10">│</span>  <span class="r2">         </span>  Edge.app/Contents/Frameworks/Mi…                                                 <span class="r10">│</span>
+<span class="r10">│</span>  <span class="r2">    2304 </span>  /Applications/Microsoft              332.0 MB       0%           —           —   <span class="r10">│</span>
+<span class="r10">│</span>  <span class="r2">         </span>  Edge.app/Contents/Frameworks/Mi…                                                 <span class="r10">│</span>
+<span class="r10">│</span>  <span class="r2">     478 </span>  /Applications/Citrix                 254.2 MB       1%           —           —   <span class="r10">│</span>
+<span class="r10">│</span>  <span class="r2">         </span>  Workspace.app/Contents/CitrixWor…                                                <span class="r10">│</span>
+<span class="r10">│</span>  <span class="r2">    5145 </span>  <span class="r8">/opt/homebrew/Cellar/python@3.12…</span>    198.9 MB       0%           —           —   <span class="r10">│</span>
+<span class="r10">│</span>  <span class="r2">    5206 </span>  /Applications/Microsoft              195.4 MB       0%           —           —   <span class="r10">│</span>
+<span class="r10">│</span>  <span class="r2">         </span>  Edge.app/Contents/Frameworks/Mi…                                                 <span class="r10">│</span>
+<span class="r10">│</span>  <span class="r2">   75588 </span>  /Applications/Microsoft              183.5 MB       0%           —           —   <span class="r10">│</span>
+<span class="r10">│</span>  <span class="r2">         </span>  Edge.app/Contents/Frameworks/Mi…                                                 <span class="r10">│</span>
+<span class="r10">│</span>                                                                                              <span class="r10">│</span>
+<span class="r10">╰──────────────────────────────────────────────────────────────────────────────────────────────╯</span>
 </code></pre>
 </body>
 </html>
