@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="llmwatch — Mac terminal monitor for RAM, storage I/O, and live Ollama LLM context and tok/s."
+    />
+    <title>llmwatch — Mac system &amp; local LLM monitor</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="nav">
+      <div class="nav-inner">
+        <a class="logo" href="#">
+          <span class="logo-icon">LW</span>
+          <span>llmwatch</span>
+        </a>
+        <nav class="nav-links">
+          <a href="#preview">preview</a>
+          <a href="#features">features</a>
+          <a href="#install">install</a>
+          <a href="#usage">usage</a>
+          <a class="nav-cta" href="https://github.com/avinashpeyyety/llmwatch" target="_blank" rel="noopener">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <p class="eyebrow">macOS · terminal · ollama</p>
+        <h1>See RAM, storage, and<br />local LLM speed — live</h1>
+        <p class="lead">
+          <strong>llmwatch</strong> is a terminal dashboard for your Mac: memory and disk at a glance,
+          top processes by RAM and I/O, plus <strong>real-time Ollama context and tok/s</strong> while models run.
+        </p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#install">Install on Mac</a>
+          <a class="btn secondary" href="https://github.com/avinashpeyyety/llmwatch" target="_blank" rel="noopener">View source</a>
+        </div>
+        <div class="hero-meta">
+          <span>Python 3.10+</span>
+          <span>·</span>
+          <span>no cloud</span>
+          <span>·</span>
+          <span>press <code>Ctrl+C</code> to quit</span>
+        </div>
+      </section>
+
+      <section id="preview" class="section preview-wrap">
+        <h2>Live terminal UI</h2>
+        <p>Captured from a real <code>llmwatch</code> session on macOS — panels refresh every second.</p>
+        <div class="terminal">
+          <div class="terminal-bar">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+            <span class="terminal-title">Terminal — llmwatch</span>
+          </div>
+          <div class="terminal-body">
+            <iframe src="preview-dark.html" title="llmwatch dashboard preview" loading="lazy"></iframe>
+          </div>
+        </div>
+        <p class="preview-caption">
+          Memory · storage · Ollama models (context + tok/s) · top processes. LLM-related processes are highlighted.
+        </p>
+      </section>
+
+      <section id="features" class="section">
+        <h2>What it monitors</h2>
+        <div class="cards three">
+          <article class="card">
+            <h3>Memory &amp; swap</h3>
+            <p>RAM and swap usage with visual bars — spot pressure before Ollama or Aider slows down.</p>
+          </article>
+          <article class="card">
+            <h3>Storage &amp; disk I/O</h3>
+            <p>Volume usage per mount point, plus per-process read/write rates for the heaviest apps.</p>
+          </article>
+          <article class="card">
+            <h3>Local LLMs (Ollama)</h3>
+            <p>Loaded model RAM, context window, live generation tok/s, and last completed speed from Ollama logs.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="install" class="section">
+        <h2>Install on Mac</h2>
+        <div class="install-steps">
+          <div class="step">
+            <span class="step-num">1</span>
+            <div>
+              <h3>Clone the repo</h3>
+              <pre><code>git clone https://github.com/avinashpeyyety/llmwatch.git
+cd llmwatch</code></pre>
+            </div>
+          </div>
+          <div class="step">
+            <span class="step-num">2</span>
+            <div>
+              <h3>Run the installer</h3>
+              <pre><code>./scripts/install.sh</code></pre>
+              <p class="note">
+                Creates a virtualenv in the project folder and adds <code>llmwatch</code> to
+                <code>~/.local/bin</code>. Ensure that directory is on your <code>PATH</code>
+                (restart Terminal or <code>source ~/.zshrc</code>).
+              </p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="step-num">3</span>
+            <div>
+              <h3>Optional: Ollama for the LLM panel</h3>
+              <pre><code>brew install ollama
+brew services start ollama
+ollama pull glm4:9b   # or any model you use</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="usage" class="section">
+        <h2>Usage</h2>
+        <pre><code>llmwatch                  # default 1s refresh
+llmwatch --refresh 0.5    # faster updates
+llmwatch --processes 20   # show more processes</code></pre>
+        <p>Run from any directory after install — the command executes the project code in your clone via an editable Python install.</p>
+        <ul class="feature-list">
+          <li><strong>Live tok/s</strong> — parsed from <code>/opt/homebrew/var/log/ollama.log</code> while a model generates</li>
+          <li><strong>Context</strong> — prompt tokens, active context, and max context from Ollama <code>/api/ps</code></li>
+          <li><strong>Quit</strong> — <code>Ctrl+C</code></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        <a href="https://github.com/avinashpeyyety/llmwatch">avinashpeyyety/llmwatch</a>
+        · MIT License · macOS terminal utility
+      </p>
+    </footer>
+  </body>
+</html>
