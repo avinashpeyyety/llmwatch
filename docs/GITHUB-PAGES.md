@@ -2,24 +2,30 @@
 
 **Live URL:** [https://avinashpeyyety.github.io/llmwatch/](https://avinashpeyyety.github.io/llmwatch/)
 
-## Fix 404 ("There isn't a GitHub Pages site here")
+---
 
-The site files are in `docs/` on `main`. GitHub just needs Pages turned on once.
+## Fix 404 — enable Pages (one time)
 
-### Option A — simplest (recommended)
+The 404 *"There isn't a GitHub Pages site here"* means Pages is **not enabled** in repo settings. The site files are ready on the `gh-pages` branch (same setup as [ollama-chat-app](https://avinashpeyyety.github.io/ollama-chat-app/)).
+
+### Steps
 
 1. Open **[Settings → Pages](https://github.com/avinashpeyyety/llmwatch/settings/pages)**
-2. Under **Build and deployment → Source**, choose **Deploy from a branch**
-3. **Branch:** `main` · **Folder:** `/docs`
+2. Under **Build and deployment → Source**, select **Deploy from a branch**
+3. **Branch:** `gh-pages` · **Folder:** `/ (root)`
 4. Click **Save**
+5. Wait 1–2 minutes, then refresh the live URL
 
-Wait ~1 minute, then reload [https://avinashpeyyety.github.io/llmwatch/](https://avinashpeyyety.github.io/llmwatch/)
+You should see: *"Your site is live at https://avinashpeyyety.github.io/llmwatch/"*
 
-### Option B — GitHub Actions deploy
+---
 
-1. Open **[Settings → Pages](https://github.com/avinashpeyyety/llmwatch/settings/pages)**
-2. Under **Source**, choose **GitHub Actions**
-3. Push to `main` (or run the **Deploy GitHub Pages** workflow manually under Actions)
+## How updates work
+
+- **Automatic:** pushing to `main` runs `.github/workflows/pages.yml`, which updates the `gh-pages` branch from `docs/`
+- **Manual edit:** change `docs/index.html` or `docs/styles.css` on `main`
+
+---
 
 ## Update the terminal screenshot
 
