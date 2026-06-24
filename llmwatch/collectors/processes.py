@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 
 import psutil
 
-from llmwatch.formatters import short_cmd
+from llmwatch.formatters import process_label
 
 
 LLM_HINTS = (
@@ -73,7 +73,7 @@ class ProcessSampler:
                 cpu = proc.cpu_percent(None)
                 cmdline = info.get("cmdline") or []
                 name = info.get("name") or ""
-                label = short_cmd(cmdline, 56) or name
+                label = process_label(name, cmdline, limit=40)
                 llm_related = any(h in label.lower() or h in name.lower() for h in LLM_HINTS)
 
                 rows.append(
