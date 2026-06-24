@@ -16,12 +16,5 @@ exec "$VENV/bin/llmwatch" "\$@"
 EOF
 chmod +x "$BIN_DIR/llmwatch"
 
-cat > "$BIN_DIR/aider-merge-stats" <<EOF
-#!/usr/bin/env bash
-exec "$VENV/bin/python" -m llmwatch.merge_stats "\$@"
-EOF
-chmod +x "$BIN_DIR/aider-merge-stats"
-
 echo "Installed llmwatch -> $BIN_DIR/llmwatch"
-echo "Installed aider-merge-stats -> $BIN_DIR/aider-merge-stats"
 echo "Run: llmwatch"

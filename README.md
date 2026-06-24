@@ -8,7 +8,7 @@ Mac terminal dashboard for:
 - **Storage** per volume
 - **Top processes** by memory and disk read/write
 - **Local Ollama LLMs** — loaded context, live tok/s, prompt speed
-- **API sessions (Aider)** — xAI and other cloud models: tokens sent/received, session cost, generating status
+- **OpenCode sessions** — active model, tokens, cost, generating status, month-to-date totals
 
 ## Install
 
@@ -46,19 +46,18 @@ That gives **live generation speed** while a model is running. When idle, it sho
 
 Context comes from `GET /api/ps` (`context_length`) plus active prompt tokens from the log.
 
-## API session stats (Aider + xAI)
+## OpenCode session stats
 
-When you run `aider-xai` (or any non-Ollama model via the global `aider` launcher), Aider writes a per-session manifest and analytics log under `~/.config/aider/sessions/`. llmwatch shows:
+When you run `opencode`, `opencode-xai`, or `opencode-qwen`, OpenCode stores sessions in `~/.local/share/opencode/opencode.db`. llmwatch shows:
 
-- **Active session** — one running Aider API session (model, status, tokens, cost)
-- **Month to date (MTD)** — aggregated messages, tokens, and cost for the current calendar month
+- **Active session** — most recent OpenCode session (model, backend, status, tokens, cost)
+- **Month to date (MTD)** — aggregated tokens, messages, and cost for the current calendar month
 
-Ended or suspended sessions are cleaned up automatically and no longer appear in the panel.
-
-Requires the global launcher from [aider-local](../aider-local) — plain `aider.real` does not emit session files.
+Supports both local Ollama models (`ollama/qwen3.5-64k`) and cloud APIs (`xai/grok-build-0.1`).
 
 ## Requirements
 
 - macOS
 - Python 3.10+
-- Ollama (optional, for LLM panel)
+- Ollama (optional, for local LLM panel)
+- OpenCode (optional, for agent session panel)

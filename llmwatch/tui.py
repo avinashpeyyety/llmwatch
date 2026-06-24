@@ -125,7 +125,7 @@ def _render_active_session(session: ApiSession) -> RenderableType:
     else:
         table.add_row(
             "Stats",
-            Text("restart via aider-xai for live token/cost tracking", style="dim"),
+            Text("run opencode in another terminal for live tracking", style="dim"),
         )
     if session.repo:
         table.add_row("Repo", short_path(session.repo, 48))
@@ -140,14 +140,14 @@ def render_api_panel(dashboard: ApiDashboard) -> Panel:
         sections.append(_render_active_session(dashboard.sessions[0]))
         sections.append(Text(""))
     else:
-        sections.append(Text("No active API session", style="dim"))
+        sections.append(Text("No active OpenCode session", style="dim"))
         sections.append(Text(""))
 
     sections.append(_render_mtd_stats(dashboard.mtd))
 
     return Panel(
         Group(*sections),
-        title="API sessions (Aider)",
+        title="OpenCode sessions",
         border_style="yellow",
         box=box.ROUNDED,
     )

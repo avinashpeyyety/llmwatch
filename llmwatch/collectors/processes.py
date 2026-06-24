@@ -14,7 +14,7 @@ LLM_HINTS = (
     "llama.cpp",
     "mlx",
     "lmstudio",
-    "aider",
+    "opencode",
     "node server",
     "control-server",
     "python",
