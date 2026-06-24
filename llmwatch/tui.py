@@ -136,6 +136,10 @@ def _render_active_session(session: ApiSession) -> RenderableType:
 def render_api_panel(dashboard: ApiDashboard) -> Panel:
     sections: list[RenderableType] = []
 
+    if dashboard.error:
+        sections.append(Text(dashboard.error, style="yellow"))
+        sections.append(Text(""))
+
     if dashboard.sessions:
         sections.append(_render_active_session(dashboard.sessions[0]))
         sections.append(Text(""))

@@ -1,6 +1,6 @@
 [project]
 name = "llmwatch"
-version = "1.1.0"
+version = "1.1.1"
 description = "Mac terminal monitor for RAM, disk I/O, and local LLM performance"
 readme = "README.md"
 requires-python = ">=3.10"

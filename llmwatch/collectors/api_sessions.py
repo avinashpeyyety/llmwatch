@@ -65,6 +65,7 @@ class ApiDashboard:
     sessions: list[ApiSession] = field(default_factory=list)
     last_interaction: LastInteraction | None = None
     mtd: MtdStats = field(default_factory=MtdStats)
+    error: str | None = None
 
 
 @dataclass
@@ -85,8 +86,14 @@ class ApiSessionMonitor:
         if not self.db_path.exists():
             return None
         try:
-            conn = sqlite3.connect(f"file:{self.db_path}?mode=ro", uri=True)
+            conn = sqlite3.connect(
+                f"file:{self.db_path}?mode=ro",
+                uri=True,
+                timeout=3.0,
+            )
             conn.row_factory = sqlite3.Row
+            conn.execute("PRAGMA busy_timeout = 3000")
+            conn.execute("PRAGMA query_only = ON")
             return conn
         except sqlite3.Error:
             return None
@@ -307,10 +314,17 @@ class ApiSessionMonitor:
         )
 
     def collect(self) -> ApiDashboard:
+        month_key, _, _ = self._month_bounds_ms()
+        empty = ApiDashboard(mtd=MtdStats(month=month_key))
+
+        if not self.db_path.exists():
+            empty.error = f"OpenCode DB not found: {self.db_path}"
+            return empty
+
         conn = self._connect()
         if conn is None:
-            month_key, _, _ = self._month_bounds_ms()
-            return ApiDashboard(mtd=MtdStats(month=month_key))
+            empty.error = f"Could not open OpenCode DB: {self.db_path}"
+            return empty
 
         try:
             pids = self._opencode_pids()
@@ -321,5 +335,11 @@ class ApiSessionMonitor:
                 last_interaction=self._last_interaction(conn),
                 mtd=self._mtd_stats(conn),
             )
+        except sqlite3.Error as exc:
+            empty.error = f"OpenCode DB read failed: {exc}"
+            return empty
+        except (json.JSONDecodeError, TypeError, ValueError) as exc:
+            empty.error = f"OpenCode data parse failed: {exc}"
+            return empty
         finally:
             conn.close()

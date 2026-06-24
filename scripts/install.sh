@@ -15,6 +15,12 @@ cat > "$BIN_DIR/llmwatch" <<EOF
 exec "$VENV/bin/llmwatch" "\$@"
 EOF
 chmod +x "$BIN_DIR/llmwatch"
+rm -f "$BIN_DIR/aider-merge-stats"
+
+if ! "$BIN_DIR/llmwatch" --version >/dev/null 2>&1; then
+  echo "Install failed: llmwatch --version did not run." >&2
+  exit 1
+fi
 
 echo "Installed llmwatch -> $BIN_DIR/llmwatch"
 echo "Run: llmwatch"

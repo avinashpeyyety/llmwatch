@@ -63,15 +63,35 @@ def main(argv: list[str] | None = None) -> int:
     sampler = ProcessSampler()
     ollama = OllamaMonitor(host=host, log_path=Path(args.ollama_log))
     api_sessions = ApiSessionMonitor()
+    use_screen = sys.stdout.isatty() and sys.stdin.isatty()
 
     try:
-        with Live(console=console, refresh_per_second=4, screen=True) as live:
+        with Live(
+            console=console,
+            refresh_per_second=4,
+            screen=use_screen,
+        ) as live:
             while True:
-                mem = collect_memory()
-                disks = collect_disk()
-                processes = sampler.collect(top_n=args.processes, interval=args.refresh)
-                runtimes = ollama.collect()
-                api_dashboard = api_sessions.collect()
+                try:
+                    mem = collect_memory()
+                    disks = collect_disk()
+                    processes = sampler.collect(
+                        top_n=args.processes,
+                        interval=args.refresh,
+                    )
+                    runtimes = ollama.collect()
+                    api_dashboard = api_sessions.collect()
+                    ollama_up = ollama_reachable(host)
+                except Exception as exc:
+                    from llmwatch.collectors.api_sessions import ApiDashboard
+
+                    mem = collect_memory()
+                    disks = collect_disk()
+                    processes = []
+                    runtimes = []
+                    api_dashboard = ApiDashboard(error=str(exc))
+                    ollama_up = False
+
                 live.update(
                     render_dashboard(
                         mem=mem,
@@ -79,13 +99,14 @@ def main(argv: list[str] | None = None) -> int:
                         processes=processes,
                         runtimes=runtimes,
                         api_dashboard=api_dashboard,
-                        ollama_up=ollama_reachable(host),
+                        ollama_up=ollama_up,
                         refresh_s=args.refresh,
                     )
                 )
                 time.sleep(max(args.refresh, 0.2))
     except KeyboardInterrupt:
-        console.clear()
+        if use_screen:
+            console.clear()
         console.print("[dim]llmwatch stopped[/dim]")
         return 0
 
