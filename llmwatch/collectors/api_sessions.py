@@ -15,6 +15,13 @@ DEFAULT_OPENCODE_DB = Path.home() / ".local/share/opencode/opencode.db"
 ACTIVE_GRACE_SECONDS = 300
 
 
+@dataclass
+class OpenCodeProcess:
+    pid: int
+    model_ref: str
+    cwd: str
+
+
 def parse_model_field(raw: str) -> tuple[str, str]:
     if not raw:
         return "unknown", "API"
@@ -40,6 +47,59 @@ def parse_model_field(raw: str) -> tuple[str, str]:
 
 def is_cloud_provider(provider: str) -> bool:
     return provider not in {"", "ollama"}
+
+
+def _parse_model_flag(cmdline: list[str]) -> str:
+    for index, arg in enumerate(cmdline):
+        if arg == "-m" and index + 1 < len(cmdline):
+            return cmdline[index + 1]
+        if arg.startswith("-m") and len(arg) > 2:
+            return arg[2:]
+    return ""
+
+
+def _normalize_path(path: str) -> str:
+    if not path:
+        return ""
+    try:
+        return str(Path(path).resolve())
+    except OSError:
+        return path
+
+
+def _directories_match(left: str, right: str) -> bool:
+    a = _normalize_path(left)
+    b = _normalize_path(right)
+    if not a or not b:
+        return False
+    return a == b or a.startswith(b + "/") or b.startswith(a + "/")
+
+
+def _models_match(cli_model: str, session_model_raw: str) -> bool:
+    cli = cli_model.strip()
+    if not cli:
+        return False
+
+    display, _ = parse_model_field(session_model_raw)
+    if cli == display:
+        return True
+    if "/" in display and cli == display.split("/", 1)[1]:
+        return True
+    if "/" in cli and display.endswith("/" + cli.split("/", 1)[1]):
+        return True
+
+    try:
+        data = json.loads(session_model_raw)
+    except json.JSONDecodeError:
+        return cli == session_model_raw
+
+    model_id = str(data.get("id") or data.get("modelID") or "")
+    provider = str(data.get("providerID") or "")
+    if cli in {model_id, f"{provider}/{model_id}"}:
+        return True
+    if "/" in cli and cli.split("/", 1)[1] == model_id:
+        return True
+    return False
 
 
 @dataclass
@@ -98,8 +158,8 @@ class ApiSessionMonitor:
         except sqlite3.Error:
             return None
 
-    def _opencode_pids(self) -> list[int]:
-        pids: list[int] = []
+    def _opencode_processes(self) -> list[OpenCodeProcess]:
+        processes: list[OpenCodeProcess] = []
         for proc in psutil.process_iter(["pid", "name", "cmdline", "status"]):
             try:
                 status = proc.info.get("status")
@@ -109,14 +169,66 @@ class ApiSessionMonitor:
                     psutil.STATUS_STOPPED,
                 ):
                     continue
-                name = (proc.info.get("name") or "").lower()
                 cmdline = proc.info.get("cmdline") or []
-                joined = " ".join(cmdline).lower()
-                if "opencode" in name or "opencode" in joined:
-                    pids.append(int(proc.info["pid"]))
+                if not cmdline:
+                    continue
+                name = (proc.info.get("name") or "").lower()
+                executable = Path(cmdline[0]).name.lower()
+                if executable != "opencode" and name != "opencode":
+                    continue
+                try:
+                    cwd = proc.cwd()
+                except (psutil.AccessDenied, psutil.NoSuchProcess):
+                    cwd = ""
+                processes.append(
+                    OpenCodeProcess(
+                        pid=int(proc.info["pid"]),
+                        model_ref=_parse_model_flag(cmdline),
+                        cwd=cwd,
+                    )
+                )
             except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
                 continue
-        return pids
+        return processes
+
+    def _recent_sessions(self, conn: sqlite3.Connection, limit: int = 20) -> list[sqlite3.Row]:
+        try:
+            return conn.execute(
+                """
+                SELECT id, model, directory, cost, tokens_input, tokens_output,
+                       time_created, time_updated
+                FROM session
+                ORDER BY time_updated DESC
+                LIMIT ?
+                """,
+                (limit,),
+            ).fetchall()
+        except sqlite3.Error:
+            return []
+
+    def _match_session(
+        self,
+        rows: list[sqlite3.Row],
+        process: OpenCodeProcess,
+    ) -> sqlite3.Row | None:
+        if process.model_ref and process.cwd:
+            for row in rows:
+                if _directories_match(process.cwd, str(row["directory"] or "")) and _models_match(
+                    process.model_ref, str(row["model"] or "")
+                ):
+                    return row
+
+        if process.model_ref:
+            for row in rows:
+                if _models_match(process.model_ref, str(row["model"] or "")):
+                    return row
+
+        if process.cwd:
+            for row in rows:
+                if _directories_match(process.cwd, str(row["directory"] or "")):
+                    return row
+
+        return None
 
     def _session_status(self, conn: sqlite3.Connection, session_id: str) -> str:
         try:
@@ -177,7 +289,7 @@ class ApiSessionMonitor:
         row: sqlite3.Row,
         *,
         pid: int = 0,
-        force_active: bool = False,
+        running: bool = False,
     ) -> ApiSession:
         model, backend = parse_model_field(str(row["model"] or ""))
         updated_ms = int(row["time_updated"] or 0)
@@ -187,7 +299,7 @@ class ApiSessionMonitor:
         session_id = str(row["id"] or "")
 
         status = self._session_status(conn, session_id)
-        if force_active and status == "idle":
+        if running and status == "idle":
             status = "active"
 
         return ApiSession(
@@ -207,36 +319,39 @@ class ApiSessionMonitor:
             session_id=session_id,
         )
 
-    def _active_session(self, conn: sqlite3.Connection, pids: list[int]) -> ApiSession | None:
-        try:
-            row = conn.execute(
-                """
-                SELECT id, model, directory, cost, tokens_input, tokens_output,
-                       time_created, time_updated
-                FROM session
-                ORDER BY time_updated DESC
-                LIMIT 1
-                """
-            ).fetchone()
-        except sqlite3.Error:
+    def _active_session(
+        self,
+        conn: sqlite3.Connection,
+        processes: list[OpenCodeProcess],
+    ) -> ApiSession | None:
+        rows = self._recent_sessions(conn)
+        if not rows:
             return None
 
-        if row is None:
-            return None
+        for process in processes:
+            row = self._match_session(rows, process)
+            if row is not None:
+                return self._session_from_row(
+                    conn,
+                    row,
+                    pid=process.pid,
+                    running=True,
+                )
 
-        updated_ms = int(row["time_updated"] or 0)
-        updated_at = updated_ms / 1000 if updated_ms else 0.0
-        recently_active = (time.time() - updated_at) <= ACTIVE_GRACE_SECONDS
-        if not pids and not recently_active:
-            return None
+        now = time.time()
+        for row in rows:
+            updated_ms = int(row["time_updated"] or 0)
+            updated_at = updated_ms / 1000 if updated_ms else 0.0
+            session_id = str(row["id"] or "")
+            status = self._session_status(conn, session_id)
+            recently_active = (now - updated_at) <= ACTIVE_GRACE_SECONDS
 
-        pid = pids[0] if pids else 0
-        return self._session_from_row(
-            conn,
-            row,
-            pid=pid,
-            force_active=bool(pids),
-        )
+            if status == "generating":
+                return self._session_from_row(conn, row)
+            if recently_active and not processes:
+                return self._session_from_row(conn, row)
+
+        return None
 
     def _mtd_stats(self, conn: sqlite3.Connection) -> MtdStats:
         month_key, start_ms, end_ms = self._month_bounds_ms()
@@ -327,8 +442,8 @@ class ApiSessionMonitor:
             return empty
 
         try:
-            pids = self._opencode_pids()
-            session = self._active_session(conn, pids)
+            processes = self._opencode_processes()
+            session = self._active_session(conn, processes)
             sessions = [session] if session is not None else []
             return ApiDashboard(
                 sessions=sessions,
