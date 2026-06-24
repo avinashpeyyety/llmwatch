@@ -45,6 +45,16 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         default=12,
         help="Number of top RAM processes to show",
     )
+    parser.add_argument(
+        "--once",
+        action="store_true",
+        help="Print one snapshot and exit (no live TUI)",
+    )
+    parser.add_argument(
+        "--no-screen",
+        action="store_true",
+        help="Disable full-screen TUI mode (use in embedded terminals)",
+    )
     return parser.parse_args(argv)
 
 
@@ -56,14 +66,62 @@ def ollama_reachable(host: str) -> bool:
         return False
 
 
-def main(argv: list[str] | None = None) -> int:
-    args = parse_args(argv)
-    console = Console()
+def collect_snapshot(args: argparse.Namespace) -> tuple:
     host = args.ollama_host or OllamaMonitor().host
     sampler = ProcessSampler()
     ollama = OllamaMonitor(host=host, log_path=Path(args.ollama_log))
     api_sessions = ApiSessionMonitor()
-    use_screen = sys.stdout.isatty() and sys.stdin.isatty()
+    mem = collect_memory()
+    disks = collect_disk()
+    processes = sampler.collect(top_n=args.processes, interval=args.refresh)
+    runtimes = ollama.collect()
+    api_dashboard = api_sessions.collect()
+    ollama_up = ollama_reachable(host)
+    return mem, disks, processes, runtimes, api_dashboard, ollama_up
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(argv)
+    console = Console()
+    use_screen = (
+        not args.no_screen
+        and sys.stdout.isatty()
+        and sys.stdin.isatty()
+        and not args.once
+    )
+
+    if args.once:
+        try:
+            mem, disks, processes, runtimes, api_dashboard, ollama_up = collect_snapshot(args)
+        except Exception as exc:
+            from llmwatch.collectors.api_sessions import ApiDashboard
+
+            mem = collect_memory()
+            disks = collect_disk()
+            processes = []
+            runtimes = []
+            api_dashboard = ApiDashboard(error=str(exc))
+            ollama_up = False
+        console.print(
+            render_dashboard(
+                mem=mem,
+                disks=disks,
+                processes=processes,
+                runtimes=runtimes,
+                api_dashboard=api_dashboard,
+                ollama_up=ollama_up,
+                refresh_s=args.refresh,
+            )
+        )
+        return 0
+
+    if use_screen:
+        console.print("[dim]Starting llmwatch...[/dim]")
+
+    host = args.ollama_host or OllamaMonitor().host
+    sampler = ProcessSampler()
+    ollama = OllamaMonitor(host=host, log_path=Path(args.ollama_log))
+    api_sessions = ApiSessionMonitor()
 
     try:
         with Live(

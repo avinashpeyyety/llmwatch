@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-VENV="$ROOT/.venv"
+SOURCE="$(cd "$(dirname "$0")/.." && pwd)"
+INSTALL_ROOT="${HOME}/.local/share/llmwatch"
+VENV="$INSTALL_ROOT/.venv"
 BIN_DIR="${HOME}/.local/bin"
 
+mkdir -p "$INSTALL_ROOT"
 python3 -m venv "$VENV"
 "$VENV/bin/pip" install --upgrade pip
-"$VENV/bin/pip" install -e "$ROOT"
+# Non-editable install copies package into local venv (avoids OneDrive cold-start lag).
+"$VENV/bin/pip" install "$SOURCE"
 
 mkdir -p "$BIN_DIR"
 cat > "$BIN_DIR/llmwatch" <<EOF
@@ -23,4 +26,5 @@ if ! "$BIN_DIR/llmwatch" --version >/dev/null 2>&1; then
 fi
 
 echo "Installed llmwatch -> $BIN_DIR/llmwatch"
+echo "Runtime: $VENV"
 echo "Run: llmwatch"
