@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="llmwatch — Mac terminal monitor for RAM, storage I/O, Ollama tok/s, and Aider xAI API session stats."
+      content="llmwatch — Mac terminal monitor for RAM, storage I/O, Ollama tok/s, and OpenCode session stats."
     />
     <title>llmwatch — Mac system &amp; LLM monitor</title>
     <link rel="stylesheet" href="styles.css" />
@@ -29,12 +29,12 @@
 
     <main>
       <section class="hero">
-        <p class="eyebrow">macOS · terminal · ollama · aider · xai</p>
+        <p class="eyebrow">macOS · terminal · ollama · opencode · xai</p>
         <h1>See RAM, storage, and<br />LLM activity — live</h1>
         <p class="lead">
           <strong>llmwatch</strong> is a terminal dashboard for your Mac: memory and disk at a glance,
           top processes by RAM and I/O, <strong>real-time Ollama context and tok/s</strong>,
-          and <strong>Aider API session stats</strong> for xAI and other cloud models.
+          and <strong>OpenCode session stats</strong> for local Ollama and cloud models.
         </p>
         <div class="hero-actions">
           <a class="btn primary" href="#install">Install on Mac</a>
@@ -65,7 +65,7 @@
           </div>
         </div>
         <p class="preview-caption">
-          Memory · storage · Ollama (context + tok/s) · API sessions (Aider + xAI) · top processes.
+          Memory · storage · Ollama (context + tok/s) · OpenCode sessions · top processes.
         </p>
       </section>
 
@@ -74,7 +74,7 @@
         <div class="cards three">
           <article class="card">
             <h3>Memory &amp; swap</h3>
-            <p>RAM and swap usage with visual bars — spot pressure before Ollama or Aider slows down.</p>
+            <p>RAM and swap usage with visual bars — spot pressure before Ollama or OpenCode slows down.</p>
           </article>
           <article class="card">
             <h3>Storage &amp; disk I/O</h3>
@@ -85,8 +85,8 @@
             <p>Loaded model RAM, context window, live generation tok/s, and last completed speed from Ollama logs.</p>
           </article>
           <article class="card">
-            <h3>API sessions (Aider)</h3>
-            <p>One active Aider xAI session (model, status, tokens, cost) plus month-to-date totals. Ended sessions drop off automatically.</p>
+            <h3>OpenCode sessions</h3>
+            <p>Active OpenCode session (model, backend, status, tokens, cost) plus month-to-date totals from <code>opencode.db</code>.</p>
           </article>
         </div>
       </section>
@@ -108,8 +108,8 @@ cd llmwatch</code></pre>
               <h3>Run the installer</h3>
               <pre><code>./scripts/install.sh</code></pre>
               <p class="note">
-                Creates a virtualenv in the project folder and adds <code>llmwatch</code> and
-                <code>aider-merge-stats</code> to <code>~/.local/bin</code>. Ensure that directory is on your
+                Creates a virtualenv in the project folder and adds <code>llmwatch</code> to
+                <code>~/.local/bin</code>. Ensure that directory is on your
                 <code>PATH</code> (restart Terminal or <code>source ~/.zshrc</code>).
               </p>
             </div>
@@ -126,11 +126,11 @@ ollama pull qwen3.5:9b   # or any model you use</code></pre>
           <div class="step">
             <span class="step-num">4</span>
             <div>
-              <h3>Optional: Aider + xAI for API session stats</h3>
-              <pre><code># Use the global aider launcher (aider-xai), not aider.real
-aider-xai .
+              <h3>Optional: OpenCode for agent session stats</h3>
+              <pre><code>brew install anomalyco/tap/opencode
+opencode-xai    # or opencode-qwen for local Ollama
 
-# llmwatch reads ~/.config/aider/sessions/ and api-stats.json</code></pre>
+# llmwatch reads ~/.local/share/opencode/opencode.db</code></pre>
             </div>
           </div>
         </div>
@@ -141,12 +141,12 @@ aider-xai .
         <pre><code>llmwatch                  # default 1s refresh
 llmwatch --refresh 0.5    # faster updates
 llmwatch --processes 20   # show more processes</code></pre>
-        <p>Run from any directory after install. Pair with <code>aider-xai</code> in another terminal to populate API session stats.</p>
+        <p>Run from any directory after install. Pair with <code>opencode</code> in another terminal to populate session stats.</p>
         <ul class="feature-list">
           <li><strong>Ollama tok/s</strong> — parsed from <code>/opt/homebrew/var/log/ollama.log</code> while a model generates</li>
           <li><strong>Ollama context</strong> — prompt tokens, active context, and max context from <code>/api/ps</code></li>
-          <li><strong>API session</strong> — one active Aider xAI session with tokens, cost, and generating status</li>
-          <li><strong>Month to date</strong> — aggregated API messages, tokens, and cost for the current month</li>
+          <li><strong>OpenCode session</strong> — active session with model, tokens, cost, and generating status</li>
+          <li><strong>Month to date</strong> — aggregated OpenCode messages, tokens, and cost for the current month</li>
           <li><strong>Quit</strong> — <code>Ctrl+C</code></li>
         </ul>
       </section>

@@ -19,10 +19,10 @@ llmwatch  17:13:51  refresh 1.0s  q quit
 ╭───────────────────────────────────────── Local LLMs ─────────────────────────────────────────╮
 │ No models loaded in memory. Run a model to see context and tok/s.                            │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────╯
-╭──────────────────────────────────── API sessions (Aider) ────────────────────────────────────╮
+╭──────────────────────────────────── OpenCode sessions ────────────────────────────────────╮
 │ Section Active session                                                                       │
 │ Backend xAI                                                                                  │
-│ Model   xai/grok-code-fast-1                                                                 │
+│ Model   xai/grok-build-0.1                                                                 │
 │ Status  ○ idle                                                                               │
 │ Tokens  0 sent · 0 received                                                                  │
 │ Repo    ~/OneDrive/AI Projects                                                               │
