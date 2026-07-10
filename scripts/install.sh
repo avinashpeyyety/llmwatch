@@ -9,8 +9,8 @@ BIN_DIR="${HOME}/.local/bin"
 mkdir -p "$INSTALL_ROOT"
 python3 -m venv "$VENV"
 "$VENV/bin/pip" install --upgrade pip
-# Non-editable install copies package into local venv (avoids OneDrive cold-start lag).
-"$VENV/bin/pip" install "$SOURCE"
+# Editable install keeps ~/.local/bin/llmwatch in sync with source changes.
+"$VENV/bin/pip" install -e "$SOURCE"
 
 mkdir -p "$BIN_DIR"
 cat > "$BIN_DIR/llmwatch" <<EOF

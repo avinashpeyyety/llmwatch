@@ -28,6 +28,37 @@ class IoSample:
     at: float = field(default_factory=time.time)
 
 
+def _rollup_processes(rows: list[dict]) -> list[dict]:
+    groups: dict[str, dict] = {}
+
+    for row in rows:
+        key = row["label"]
+        group = groups.get(key)
+        if group is None:
+            groups[key] = {
+                "pid": row["pid"],
+                "name": row["name"],
+                "user": row["user"],
+                "rss": row["rss"],
+                "cpu": row["cpu"],
+                "read_bps": row["read_bps"],
+                "write_bps": row["write_bps"],
+                "label": key,
+                "llm": row["llm"],
+                "count": 1,
+            }
+            continue
+
+        group["rss"] += row["rss"]
+        group["cpu"] += row["cpu"]
+        group["read_bps"] += row["read_bps"]
+        group["write_bps"] += row["write_bps"]
+        group["llm"] = group["llm"] or row["llm"]
+        group["count"] += 1
+
+    return list(groups.values())
+
+
 class ProcessSampler:
     def __init__(self) -> None:
         self._io_prev: dict[int, IoSample] = {}
@@ -92,5 +123,6 @@ class ProcessSampler:
             except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
                 continue
 
-        rows.sort(key=lambda r: r["rss"], reverse=True)
-        return rows[:top_n]
+        rolled_up = _rollup_processes(rows)
+        rolled_up.sort(key=lambda r: r["rss"], reverse=True)
+        return rolled_up[:top_n]

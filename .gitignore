@@ -8,3 +8,6 @@ build/
 *.swp
 .env
 .aider*
+
+# ensure-git
+node_modules/

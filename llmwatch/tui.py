@@ -69,8 +69,10 @@ def render_process_panel(processes: list[dict]) -> Panel:
 
     for proc in processes:
         style = "bold yellow" if proc["llm"] else ""
+        count = proc.get("count", 1)
+        pid_cell = f"×{count}" if count > 1 else str(proc["pid"])
         table.add_row(
-            str(proc["pid"]),
+            pid_cell,
             Text(proc["label"], style=style, overflow="ellipsis"),
             bytes_human(proc["rss"]),
             f"{proc['cpu']:.0f}%",
