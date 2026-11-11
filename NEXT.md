@@ -11,7 +11,7 @@
 ## Later
 
 - [ ] Shared Rich conventions note with monet (link panels / colors)
-- [ ] Optional JSON one-shot for scripts (labboard / talkatak notify)
+- [ ] Optional JSON one-shot for scripts (talkatak notify)
 - [ ] Disk I/O process columns polish under heavy train load
 
 ## Done
